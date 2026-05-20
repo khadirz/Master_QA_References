@@ -1,0 +1,15 @@
+{
+  "name": "typescript-master-reference",
+  "version": "1.0.0",
+  "description": "Beginner-friendly TypeScript reference examples for learning and test automation",
+  "scripts": {
+    "start": "ts-node 01_console_output.ts",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "ts-node": "latest",
+    "typescript": "latest"
+  }
+}
