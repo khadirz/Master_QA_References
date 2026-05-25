@@ -68,7 +68,9 @@ jobs:
             python_tests/test_TC007_add_product_with_logged_in_fixture.py \
             python_tests/test_TC008_add_specific_product_with_fixture.py \
             python_tests/test_TC009_remove_product_with_fixture.py \
+            python_tests/test_TC010_negative_login.py \
             --browser chromium
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
