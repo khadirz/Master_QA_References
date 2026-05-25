@@ -161,13 +161,14 @@ def product_in_basket_page(logged_in_page: Page):
     go_to_homepage(page)
 
     # STEP 3:
-    # Search for Apple Juice.
-    search_product(page, "Apple Juice")
+    # Open Apple Juice search results directly.
+    # This is more stable in CI than clicking the search icon and pressing Enter.
+    page.goto("http://localhost:3000/#/search?q=Apple%20Juice")
 
     # STEP 4:
     # Verify search result page is shown.
-    expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible()
-
+    expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible(timeout=10000)
+    
     # STEP 5:
     # Click the first visible Add to Basket button.
     # After searching Apple Juice, Apple Juice is the first matching product.
