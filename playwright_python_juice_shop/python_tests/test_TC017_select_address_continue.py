@@ -10,18 +10,25 @@ from helpers.basket_helper import (
 from helpers.checkout_helper import (
     click_checkout,
     verify_address_selection_page,
+    select_first_address,
+    click_continue_to_delivery_method,
+    verify_delivery_method_page,
 )
 from test_data.users import VALID_USER_EMAIL, VALID_USER_PASSWORD
 
 
-def test_checkout_first_step_opens_address_page(page: Page):
+def test_select_address_and_continue_to_delivery_method(page: Page):
     """
     Test goal:
     Add Apple Juice to the basket,
-    click Checkout,
-    and verify that the address selection page opens.
+    start checkout,
+    select an existing address,
+    click Continue,
+    and verify that the delivery method page opens.
 
-    This version uses checkout helper functions.
+    Precondition:
+    The user should already have at least one address.
+    TC016 creates an address, so run TC016 first if this test fails because no address exists.
     """
 
     # STEP 1:
@@ -29,7 +36,7 @@ def test_checkout_first_step_opens_address_page(page: Page):
     open_juice_shop_homepage(page)
 
     # STEP 2:
-    # Login with valid user.
+    # Login with shared valid user.
     login_to_juice_shop(
         page,
         email=VALID_USER_EMAIL,
@@ -45,7 +52,7 @@ def test_checkout_first_step_opens_address_page(page: Page):
     search_product(page, "Apple Juice")
 
     # STEP 5:
-    # Verify Apple Juice is visible.
+    # Verify Apple Juice is visible in search results.
     expect(page.get_by_text("Apple Juice (1000ml)")).to_be_visible()
 
     # STEP 6:
@@ -61,9 +68,21 @@ def test_checkout_first_step_opens_address_page(page: Page):
     verify_product_in_basket(page, "Apple Juice (1000ml)")
 
     # STEP 9:
-    # Click Checkout using helper.
+    # Click Checkout.
     click_checkout(page)
 
     # STEP 10:
-    # Verify address selection page is open using helper.
+    # Verify address selection page is open.
     verify_address_selection_page(page)
+
+    # STEP 11:
+    # Select the first available address.
+    select_first_address(page)
+
+    # STEP 12:
+    # Click Continue to go to delivery method page.
+    click_continue_to_delivery_method(page)
+
+    # STEP 13:
+    # Verify delivery method page is open.
+    verify_delivery_method_page(page)
