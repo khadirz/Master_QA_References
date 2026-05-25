@@ -150,6 +150,12 @@ def product_in_basket_page(logged_in_page: Page):
     Why this is useful:
     Basket and checkout tests can start from a stable state:
     Apple Juice is already in the basket.
+
+    Important:
+    This fixture does not use search.
+    Search is tested separately in TC003 and TC012.
+    For fixture setup, we use the first product on the homepage,
+    which is Apple Juice in OWASP Juice Shop.
     """
 
     # STEP 1:
@@ -161,55 +167,48 @@ def product_in_basket_page(logged_in_page: Page):
     go_to_homepage(page)
 
     # STEP 3:
-    # Open Apple Juice search results directly.
-    # This is more stable in CI than clicking the search icon and pressing Enter.
-    page.goto("http://localhost:3000/#/search?q=Apple%20Juice")
+    # Verify homepage is visible.
+    expect(page.get_by_text("All Products")).to_be_visible()
 
     # STEP 4:
-    # Verify search result page is shown.
-    expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible(timeout=10000)
-    
-    # STEP 5:
-    # Click the first visible Add to Basket button.
-    # After searching Apple Juice, Apple Juice is the first matching product.
+    # Add the first visible product to basket.
+    # In a fresh Juice Shop product list, Apple Juice is the first product.
     add_to_basket_button = page.get_by_role("button", name="Add to Basket").first
 
     expect(add_to_basket_button).to_be_visible()
     expect(add_to_basket_button).to_be_enabled()
 
-    # Force click helps in CI when animation or overlay timing interferes.
     add_to_basket_button.click(force=True)
 
-    # STEP 6:
+    # STEP 5:
     # Confirm the app accepted the add-to-basket action.
     expect(page.get_by_text("Placed Apple Juice (1000ml) into basket.")).to_be_visible()
 
-    # STEP 7:
+    # STEP 6:
     # Wait until basket counter shows 1.
     expect(page.locator(".fa-layers-counter")).to_have_text("1", timeout=10000)
 
-    # STEP 8:
+    # STEP 7:
     # Open basket directly.
-    # This is more stable than relying on a click on the basket button.
     page.goto("http://localhost:3000/#/basket")
 
-    # STEP 9:
+    # STEP 8:
     # Verify basket page is open.
     expect(page.get_by_role("heading", name="Your Basket", exact=False)).to_be_visible()
 
-    # STEP 10:
+    # STEP 9:
     # Reload basket page to make sure table data is refreshed.
     page.reload()
 
-    # STEP 11:
+    # STEP 10:
     # Verify basket page is still open.
     expect(page.get_by_role("heading", name="Your Basket", exact=False)).to_be_visible()
 
-    # STEP 12:
+    # STEP 11:
     # Verify Apple Juice is in basket.
     verify_product_in_basket(page, "Apple Juice (1000ml)")
 
-    # STEP 13:
+    # STEP 12:
     # Return the prepared page.
     return page
 
