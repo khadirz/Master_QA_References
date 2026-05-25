@@ -77,6 +77,7 @@ jobs:
             python_tests/test_TC017_checkout_delivery_fixture_check.py \
             python_tests/test_TC018_checkout_payment_fixture_check.py \
             python_tests/test_TC020_checkout_order_summary_fixture_check.py \
+            python_tests/test_TC021_place_order_with_fixture.py \
             --browser chromium
 
       - name: Upload test results
