@@ -1,16 +1,25 @@
-from helpers.navigation_helper import go_to_homepage
-from helpers.search_helper import search_product
+from datetime import datetime
+
+import pytest
+from playwright.sync_api import Page, expect
+
 from helpers.basket_helper import (
     add_first_visible_product_to_basket,
     open_basket,
     verify_product_in_basket,
 )
-from datetime import datetime
-import pytest
-from playwright.sync_api import Page, expect
-from helpers.popup_helper import close_startup_popups
+from helpers.checkout_helper import (
+    click_checkout,
+    fill_checkout_address_form,
+    open_add_new_address_form,
+    submit_checkout_address_form,
+    verify_address_in_address_list,
+    verify_address_selection_page,
+)
 from helpers.login_helper import login_to_juice_shop
-
+from helpers.navigation_helper import go_to_homepage
+from helpers.popup_helper import close_startup_popups
+from helpers.search_helper import search_product
 
 @pytest.fixture
 def fresh_user(page: Page):
@@ -172,4 +181,47 @@ def product_in_basket_page(logged_in_page: Page):
 
     # STEP 11:
     # Return the prepared page.
+    return page
+
+@pytest.fixture
+def checkout_address_page(product_in_basket_page: Page):
+    """
+    Fixture goal:
+    Start from a basket with Apple Juice,
+    click Checkout,
+    add a new address,
+    and return the address selection page.
+    """
+
+    page = product_in_basket_page
+
+    click_checkout(page)
+
+    verify_address_selection_page(page)
+
+    open_add_new_address_form(page)
+
+    fill_checkout_address_form(
+        page,
+        country="Finland",
+        name="Khadir Test User",
+        mobile_number="0501234567",
+        zip_code="00100",
+        address="Testikatu 1",
+        city="Helsinki",
+        state="Uusimaa",
+    )
+
+    submit_checkout_address_form(page)
+
+    verify_address_selection_page(page)
+
+    verify_address_in_address_list(
+        page,
+        address="Testikatu 1",
+        city="Helsinki",
+        state="Uusimaa",
+        zip_code="00100",
+    )
+
     return page
