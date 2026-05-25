@@ -138,7 +138,7 @@ def product_in_basket_page(logged_in_page: Page):
     open the basket page, and return the page.
 
     Why this is useful:
-    Basket-related tests can start from a stable state:
+    Basket and checkout tests can start from a stable state:
     Apple Juice is already in the basket.
     """
 
@@ -159,30 +159,46 @@ def product_in_basket_page(logged_in_page: Page):
     expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible()
 
     # STEP 5:
-    # Add Apple Juice to basket.
-    add_first_visible_product_to_basket(page)
+    # Click the first visible Add to Basket button.
+    # After searching Apple Juice, Apple Juice is the first matching product.
+    add_to_basket_button = page.get_by_role("button", name="Add to Basket").first
+
+    expect(add_to_basket_button).to_be_visible()
+    expect(add_to_basket_button).to_be_enabled()
+
+    # Force click helps in CI when animation or overlay timing interferes.
+    add_to_basket_button.click(force=True)
 
     # STEP 6:
-    # Wait until basket counter shows 1.
-    expect(page.locator(".fa-layers-counter")).to_have_text("1")
+    # Confirm the app accepted the add-to-basket action.
+    expect(page.get_by_text("Placed Apple Juice (1000ml) into basket.")).to_be_visible()
 
     # STEP 7:
-    # Open basket.
-    open_basket(page)
+    # Wait until basket counter shows 1.
+    expect(page.locator(".fa-layers-counter")).to_have_text("1", timeout=10000)
 
     # STEP 8:
-    # Reload basket page to make sure table data is refreshed.
-    page.reload()
+    # Open basket directly.
+    # This is more stable than relying on a click on the basket button.
+    page.goto("http://localhost:3000/#/basket")
 
     # STEP 9:
     # Verify basket page is open.
     expect(page.get_by_role("heading", name="Your Basket", exact=False)).to_be_visible()
 
     # STEP 10:
+    # Reload basket page to make sure table data is refreshed.
+    page.reload()
+
+    # STEP 11:
+    # Verify basket page is still open.
+    expect(page.get_by_role("heading", name="Your Basket", exact=False)).to_be_visible()
+
+    # STEP 12:
     # Verify Apple Juice is in basket.
     verify_product_in_basket(page, "Apple Juice (1000ml)")
 
-    # STEP 11:
+    # STEP 13:
     # Return the prepared page.
     return page
 
