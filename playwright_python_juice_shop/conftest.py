@@ -1,3 +1,10 @@
+from helpers.navigation_helper import go_to_homepage
+from helpers.search_helper import search_product
+from helpers.basket_helper import (
+    add_first_visible_product_to_basket,
+    open_basket,
+    verify_product_in_basket,
+)
 from datetime import datetime
 import pytest
 from playwright.sync_api import Page, expect
@@ -109,4 +116,60 @@ def logged_in_page(page: Page, fresh_user):
 
     # STEP 3:
     # Return the logged-in page to the test.
+    return page
+
+@pytest.fixture
+def product_in_basket_page(logged_in_page: Page):
+    """
+    Fixture goal:
+    Create a fresh user, log in, add Apple Juice to basket,
+    open the basket page, and return the page.
+
+    Why this is useful:
+    Basket-related tests can start from a stable state:
+    Apple Juice is already in the basket.
+    """
+
+    # STEP 1:
+    # Use the page that is already logged in.
+    page = logged_in_page
+
+    # STEP 2:
+    # Go to homepage.
+    go_to_homepage(page)
+
+    # STEP 3:
+    # Search for Apple Juice.
+    search_product(page, "Apple Juice")
+
+    # STEP 4:
+    # Verify search result page is shown.
+    expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible()
+
+    # STEP 5:
+    # Add Apple Juice to basket.
+    add_first_visible_product_to_basket(page)
+
+    # STEP 6:
+    # Wait until basket counter shows 1.
+    expect(page.locator(".fa-layers-counter")).to_have_text("1")
+
+    # STEP 7:
+    # Open basket.
+    open_basket(page)
+
+    # STEP 8:
+    # Reload basket page to make sure table data is refreshed.
+    page.reload()
+
+    # STEP 9:
+    # Verify basket page is open.
+    expect(page.get_by_role("heading", name="Your Basket", exact=False)).to_be_visible()
+
+    # STEP 10:
+    # Verify Apple Juice is in basket.
+    verify_product_in_basket(page, "Apple Juice (1000ml)")
+
+    # STEP 11:
+    # Return the prepared page.
     return page
