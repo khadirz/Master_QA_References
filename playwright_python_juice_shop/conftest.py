@@ -10,11 +10,14 @@ from helpers.basket_helper import (
 )
 from helpers.checkout_helper import (
     click_checkout,
+    click_continue_to_delivery_method,
     fill_checkout_address_form,
     open_add_new_address_form,
+    select_first_address,
     submit_checkout_address_form,
     verify_address_in_address_list,
     verify_address_selection_page,
+    verify_delivery_method_page,
 )
 from helpers.login_helper import login_to_juice_shop
 from helpers.navigation_helper import go_to_homepage
@@ -223,5 +226,31 @@ def checkout_address_page(product_in_basket_page: Page):
         state="Uusimaa",
         zip_code="00100",
     )
+
+    return page
+
+@pytest.fixture
+def checkout_delivery_page(checkout_address_page: Page):
+    """
+    Fixture goal:
+    Start from the address selection page,
+    select the first available address,
+    continue to the delivery method page,
+    and return the page.
+    """
+
+    page = checkout_address_page
+
+    # STEP 1:
+    # Select the first available address.
+    select_first_address(page)
+
+    # STEP 2:
+    # Continue to delivery method page.
+    click_continue_to_delivery_method(page)
+
+    # STEP 3:
+    # Verify delivery method page is open.
+    verify_delivery_method_page(page)
 
     return page
