@@ -2,6 +2,7 @@ from datetime import datetime
 import pytest
 from playwright.sync_api import Page, expect
 from helpers.popup_helper import close_startup_popups
+from helpers.login_helper import login_to_juice_shop
 
 
 @pytest.fixture
@@ -78,3 +79,34 @@ def fresh_user(page: Page):
         "email": email,
         "password": password,
     }
+
+@pytest.fixture
+def logged_in_page(page: Page, fresh_user):
+    """
+    Fixture goal:
+    Create a fresh user, log in with that user,
+    and return a page that is already logged in.
+
+    Why this is useful:
+    Many tests need a logged-in user.
+    Instead of repeating signup and login steps in every test,
+    we can use this fixture.
+    """
+
+    # STEP 1:
+    # Get the fresh user data created by the fresh_user fixture.
+    email = fresh_user["email"]
+    password = fresh_user["password"]
+
+    # STEP 2:
+    # The fresh_user fixture leaves the browser on the Login page.
+    # Login using the fresh user.
+    login_to_juice_shop(
+        page,
+        email=email,
+        password=password
+    )
+
+    # STEP 3:
+    # Return the logged-in page to the test.
+    return page
