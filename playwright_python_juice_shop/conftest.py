@@ -11,13 +11,16 @@ from helpers.basket_helper import (
 from helpers.checkout_helper import (
     click_checkout,
     click_continue_to_delivery_method,
+    click_continue_to_payment,
     fill_checkout_address_form,
     open_add_new_address_form,
     select_first_address,
+    select_first_delivery_method,
     submit_checkout_address_form,
     verify_address_in_address_list,
     verify_address_selection_page,
     verify_delivery_method_page,
+    verify_payment_page,
 )
 from helpers.login_helper import login_to_juice_shop
 from helpers.navigation_helper import go_to_homepage
@@ -268,5 +271,34 @@ def checkout_delivery_page(checkout_address_page: Page):
     # STEP 3:
     # Verify delivery method page is open.
     verify_delivery_method_page(page)
+
+    return page
+
+@pytest.fixture
+def checkout_payment_page(checkout_delivery_page: Page):
+    """
+    Fixture goal:
+    Start from the delivery method page,
+    select the first available delivery method,
+    continue to the payment page,
+    and return the page.
+
+    Why this is useful:
+    Payment-related tests can start from a stable checkout state.
+    """
+
+    page = checkout_delivery_page
+
+    # STEP 1:
+    # Select the first available delivery method.
+    select_first_delivery_method(page)
+
+    # STEP 2:
+    # Continue to payment page.
+    click_continue_to_payment(page)
+
+    # STEP 3:
+    # Verify payment page is open.
+    verify_payment_page(page)
 
     return page
