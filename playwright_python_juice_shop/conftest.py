@@ -11,15 +11,22 @@ from helpers.basket_helper import (
 from helpers.checkout_helper import (
     click_checkout,
     click_continue_to_delivery_method,
+    click_continue_to_order_summary,
     click_continue_to_payment,
     fill_checkout_address_form,
+    fill_payment_card_form,
     open_add_new_address_form,
+    open_add_new_card_form,
     select_first_address,
     select_first_delivery_method,
+    select_first_payment_option,
     submit_checkout_address_form,
+    submit_payment_card_form,
     verify_address_in_address_list,
     verify_address_selection_page,
     verify_delivery_method_page,
+    verify_order_summary_page,
+    verify_payment_option_is_selected,
     verify_payment_page,
 )
 from helpers.login_helper import login_to_juice_shop
@@ -300,5 +307,57 @@ def checkout_payment_page(checkout_delivery_page: Page):
     # STEP 3:
     # Verify payment page is open.
     verify_payment_page(page)
+
+    return page
+
+@pytest.fixture
+def checkout_order_summary_page(checkout_payment_page: Page):
+    """
+    Fixture goal:
+    Start from the payment page,
+    add/select a payment method,
+    continue to the order summary page,
+    and return the page.
+
+    Why this is useful:
+    Order summary and order confirmation tests can start from a stable checkout state.
+    """
+
+    page = checkout_payment_page
+
+    # STEP 1:
+    # If no payment option exists, add a fake test card.
+    payment_options_count = page.get_by_role("radio").count()
+
+    if payment_options_count == 0:
+        open_add_new_card_form(page)
+
+        fill_payment_card_form(
+            page,
+            card_name="Khadir Test Card",
+            card_number="4111111111111111",
+            expiry_month="12",
+            expiry_year="2080",
+        )
+
+        submit_payment_card_form(page)
+
+        verify_payment_page(page)
+
+    # STEP 2:
+    # Select first available payment option.
+    select_first_payment_option(page)
+
+    # STEP 3:
+    # Verify payment option is selected.
+    verify_payment_option_is_selected(page)
+
+    # STEP 4:
+    # Continue to order summary page.
+    click_continue_to_order_summary(page)
+
+    # STEP 5:
+    # Verify order summary page is open.
+    verify_order_summary_page(page)
 
     return page
