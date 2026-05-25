@@ -33,10 +33,16 @@ def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: P
     # Search for Apple Juice.
     search_product(page, "Apple Juice")
 
-    # STEP 4:
+    ## STEP 4:
     # Verify the exact Apple Juice product is visible in search results.
-    # We use the full product name to avoid weak matching.
-    expect(page.get_by_text("Apple Juice (1000ml)")).to_be_visible()
+    # In this Juice Shop version, the product name is exposed as a button.
+    apple_juice_result = page.get_by_role(
+        "button",
+        name="Apple Juice (1000ml)",
+        exact=True
+    )
+
+    expect(apple_juice_result).to_be_visible()
 
     # STEP 5:
     # Add Apple Juice to basket.
