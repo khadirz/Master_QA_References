@@ -64,6 +64,7 @@ jobs:
             python_tests/test_TC003_search_product.py \
             python_tests/test_TC004_assertions_basic.py \
             python_tests/test_TC005_signup_user.py \
+            python_tests/test_TC006_login_user_with_fixture.py \
             --browser chromium
 
       - name: Upload test results
