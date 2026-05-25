@@ -72,6 +72,7 @@ jobs:
             python_tests/test_TC011_login_form_validation.py \
             python_tests/test_TC012_search_no_result.py \
             python_tests/test_TC013_product_in_basket_fixture_check.py \
+            python_tests/test_TC014_basket_quantity_with_fixture.py \
             --browser chromium
 
       - name: Upload test results
