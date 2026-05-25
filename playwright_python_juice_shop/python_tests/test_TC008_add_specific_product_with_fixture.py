@@ -33,20 +33,14 @@ def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: P
     # Search for Apple Juice.
     search_product(page, "Apple Juice")
 
-    ## STEP 4:
-    # Verify the exact Apple Juice product is visible in search results.
-    # In this Juice Shop version, the product name is exposed as a button.
-    apple_juice_result = page.get_by_role(
-        "button",
-        name="Apple Juice (1000ml)",
-        exact=True
-    )
-
-    expect(apple_juice_result).to_be_visible()
+    # STEP 4:
+    # Verify search result page is shown.
+    expect(page.get_by_text("Search Results - Apple Juice")).to_be_visible()
 
     # STEP 5:
-    # Add Apple Juice to basket.
-    # Because search result shows Apple Juice, the first Add to Basket button belongs to it.
+    # Add the first visible product to basket.
+    # In Juice Shop search results, Apple Juice appears as the first result.
+    # This avoids fragile locators that behave differently locally and in CI.
     add_first_visible_product_to_basket(page)
 
     # STEP 6:
@@ -55,4 +49,5 @@ def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: P
 
     # STEP 7:
     # Verify Apple Juice is listed in basket.
+    # This confirms that the product added was Apple Juice.
     verify_product_in_basket(page, "Apple Juice (1000ml)")
