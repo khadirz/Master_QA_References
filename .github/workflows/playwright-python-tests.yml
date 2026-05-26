@@ -78,7 +78,18 @@ jobs:
             python_tests/test_TC018_checkout_payment_fixture_check.py \
             python_tests/test_TC020_checkout_order_summary_fixture_check.py \
             python_tests/test_TC021_place_order_with_fixture.py \
-            --browser chromium
+            --browser chromium \
+            --tracing retain-on-failure \
+            --screenshot only-on-failure \
+            --video retain-on-failure
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: playwright_python_juice_shop/test-results/
+          if-no-files-found: ignore
 
       - name: Upload test results
         if: always()
