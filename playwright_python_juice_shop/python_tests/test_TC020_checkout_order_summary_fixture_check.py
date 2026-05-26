@@ -1,7 +1,9 @@
+import pytest
 from playwright.sync_api import Page
 from helpers.checkout_helper import verify_order_summary_page
 
-
+@pytest.mark.checkout
+@pytest.mark.ci
 def test_checkout_order_summary_fixture_works(checkout_order_summary_page: Page):
     """
     Test goal:

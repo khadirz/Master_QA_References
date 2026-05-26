@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page, expect
 from helpers.navigation_helper import open_juice_shop_homepage, go_to_homepage
 from helpers.login_helper import login_to_juice_shop
@@ -10,25 +11,24 @@ from helpers.basket_helper import (
 from helpers.checkout_helper import (
     click_checkout,
     verify_address_selection_page,
-    select_first_address,
-    click_continue_to_delivery_method,
-    verify_delivery_method_page,
+    open_add_new_address_form,
+    fill_checkout_address_form,
+    submit_checkout_address_form,
+    verify_address_in_address_list,
 )
 from test_data.users import VALID_USER_EMAIL, VALID_USER_PASSWORD
 
-
-def test_select_address_and_continue_to_delivery_method(page: Page):
+@pytest.mark.checkout
+@pytest.mark.ci
+def test_add_new_address_during_checkout(page: Page):
     """
     Test goal:
     Add Apple Juice to the basket,
     start checkout,
-    select an existing address,
-    click Continue,
-    and verify that the delivery method page opens.
+    add a new delivery address,
+    and verify that the address appears in the address list.
 
-    Precondition:
-    The user should already have at least one address.
-    TC016 creates an address, so run TC016 first if this test fails because no address exists.
+    This version uses checkout helper functions.
     """
 
     # STEP 1:
@@ -36,7 +36,7 @@ def test_select_address_and_continue_to_delivery_method(page: Page):
     open_juice_shop_homepage(page)
 
     # STEP 2:
-    # Login with shared valid user.
+    # Login with valid user.
     login_to_juice_shop(
         page,
         email=VALID_USER_EMAIL,
@@ -52,7 +52,7 @@ def test_select_address_and_continue_to_delivery_method(page: Page):
     search_product(page, "Apple Juice")
 
     # STEP 5:
-    # Verify Apple Juice is visible in search results.
+    # Verify Apple Juice is visible.
     expect(page.get_by_text("Apple Juice (1000ml)")).to_be_visible()
 
     # STEP 6:
@@ -72,17 +72,40 @@ def test_select_address_and_continue_to_delivery_method(page: Page):
     click_checkout(page)
 
     # STEP 10:
-    # Verify address selection page is open.
+    # Verify address selection page.
     verify_address_selection_page(page)
 
     # STEP 11:
-    # Select the first available address.
-    select_first_address(page)
+    # Open Add New Address form.
+    open_add_new_address_form(page)
 
     # STEP 12:
-    # Click Continue to go to delivery method page.
-    click_continue_to_delivery_method(page)
+    # Fill address form.
+    fill_checkout_address_form(
+        page,
+        country="Finland",
+        name="Khadir Test User",
+        mobile_number="0501234567",
+        zip_code="00100",
+        address="Testikatu 1",
+        city="Helsinki",
+        state="Uusimaa",
+    )
 
     # STEP 13:
-    # Verify delivery method page is open.
-    verify_delivery_method_page(page)
+    # Submit address form.
+    submit_checkout_address_form(page)
+
+    # STEP 14:
+    # Verify we are back on address selection page.
+    verify_address_selection_page(page)
+
+    # STEP 15:
+    # Verify created address is visible in the address list.
+    verify_address_in_address_list(
+        page,
+        address="Testikatu 1",
+        city="Helsinki",
+        state="Uusimaa",
+        zip_code="00100",
+    )

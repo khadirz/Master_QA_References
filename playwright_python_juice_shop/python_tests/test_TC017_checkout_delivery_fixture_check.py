@@ -1,7 +1,9 @@
+import pytest
 from playwright.sync_api import Page
 from helpers.checkout_helper import verify_delivery_method_page
 
-
+@pytest.mark.checkout
+@pytest.mark.ci
 def test_checkout_delivery_fixture_works(checkout_delivery_page: Page):
     """
     Test goal:

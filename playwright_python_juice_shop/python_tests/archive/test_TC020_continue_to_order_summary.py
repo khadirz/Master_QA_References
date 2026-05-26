@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page, expect
 from helpers.navigation_helper import open_juice_shop_homepage, go_to_homepage
 from helpers.login_helper import login_to_juice_shop
@@ -21,20 +22,23 @@ from helpers.checkout_helper import (
     submit_payment_card_form,
     select_first_payment_option,
     verify_payment_option_is_selected,
+    click_continue_to_order_summary,
+    verify_order_summary_page,
 )
 from test_data.users import VALID_USER_EMAIL, VALID_USER_PASSWORD
 
-
-def test_add_or_select_payment_method(page: Page):
+@pytest.mark.checkout
+@pytest.mark.ci
+def test_continue_from_payment_to_order_summary(page: Page):
     """
     Test goal:
     Add Apple Juice to basket,
     go through checkout until payment page,
-    add a payment card if needed,
-    select a payment option,
-    and verify that payment option is selected.
+    select a payment method,
+    click Continue,
+    and verify that the order summary page opens.
 
-    This test does not place the order.
+    This test does not place the order yet.
     """
 
     # STEP 1:
@@ -102,20 +106,16 @@ def test_add_or_select_payment_method(page: Page):
     click_continue_to_payment(page)
 
     # STEP 16:
-    # Verify payment page is open.
+    # Verify payment page.
     verify_payment_page(page)
 
     # STEP 17:
-    # Check if a payment option already exists.
-    # If not, add a new test card.
+    # If no payment option exists, add a fake test card.
     payment_options_count = page.get_by_role("radio").count()
 
     if payment_options_count == 0:
-        # Open Add New Card form.
         open_add_new_card_form(page)
-        
 
-        # Fill card form with fake test data.
         fill_payment_card_form(
             page,
             card_name="Khadir Test Card",
@@ -124,16 +124,21 @@ def test_add_or_select_payment_method(page: Page):
             expiry_year="2080",
         )
 
-        # Submit card form.
         submit_payment_card_form(page)
-
-        # Verify payment page is still visible after adding card.
         verify_payment_page(page)
 
     # STEP 18:
-    # Select the first available payment option.
+    # Select first available payment option.
     select_first_payment_option(page)
 
     # STEP 19:
     # Verify payment option is selected.
     verify_payment_option_is_selected(page)
+
+    # STEP 20:
+    # Continue to order summary page.
+    click_continue_to_order_summary(page)
+
+    # STEP 21:
+    # Verify order summary page is open.
+    verify_order_summary_page(page)

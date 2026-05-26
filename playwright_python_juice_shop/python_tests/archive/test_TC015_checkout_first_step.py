@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page, expect
 from helpers.navigation_helper import open_juice_shop_homepage, go_to_homepage
 from helpers.login_helper import login_to_juice_shop
@@ -10,21 +11,17 @@ from helpers.basket_helper import (
 from helpers.checkout_helper import (
     click_checkout,
     verify_address_selection_page,
-    open_add_new_address_form,
-    fill_checkout_address_form,
-    submit_checkout_address_form,
-    verify_address_in_address_list,
 )
 from test_data.users import VALID_USER_EMAIL, VALID_USER_PASSWORD
 
-
-def test_add_new_address_during_checkout(page: Page):
+@pytest.mark.checkout
+@pytest.mark.ci
+def test_checkout_first_step_opens_address_page(page: Page):
     """
     Test goal:
     Add Apple Juice to the basket,
-    start checkout,
-    add a new delivery address,
-    and verify that the address appears in the address list.
+    click Checkout,
+    and verify that the address selection page opens.
 
     This version uses checkout helper functions.
     """
@@ -66,44 +63,9 @@ def test_add_new_address_during_checkout(page: Page):
     verify_product_in_basket(page, "Apple Juice (1000ml)")
 
     # STEP 9:
-    # Click Checkout.
+    # Click Checkout using helper.
     click_checkout(page)
 
     # STEP 10:
-    # Verify address selection page.
+    # Verify address selection page is open using helper.
     verify_address_selection_page(page)
-
-    # STEP 11:
-    # Open Add New Address form.
-    open_add_new_address_form(page)
-
-    # STEP 12:
-    # Fill address form.
-    fill_checkout_address_form(
-        page,
-        country="Finland",
-        name="Khadir Test User",
-        mobile_number="0501234567",
-        zip_code="00100",
-        address="Testikatu 1",
-        city="Helsinki",
-        state="Uusimaa",
-    )
-
-    # STEP 13:
-    # Submit address form.
-    submit_checkout_address_form(page)
-
-    # STEP 14:
-    # Verify we are back on address selection page.
-    verify_address_selection_page(page)
-
-    # STEP 15:
-    # Verify created address is visible in the address list.
-    verify_address_in_address_list(
-        page,
-        address="Testikatu 1",
-        city="Helsinki",
-        state="Uusimaa",
-        zip_code="00100",
-    )

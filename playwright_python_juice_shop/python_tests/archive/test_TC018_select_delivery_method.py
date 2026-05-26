@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page, expect
 from helpers.navigation_helper import open_juice_shop_homepage, go_to_homepage
 from helpers.login_helper import login_to_juice_shop
@@ -19,7 +20,8 @@ from helpers.checkout_helper import (
 )
 from test_data.users import VALID_USER_EMAIL, VALID_USER_PASSWORD
 
-
+@pytest.mark.checkout
+@pytest.mark.ci
 def test_select_delivery_method_and_continue_to_payment(page: Page):
     """
     Test goal:
