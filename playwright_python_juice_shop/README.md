@@ -1,4 +1,5 @@
 # Playwright Python Automation Project: OWASP Juice Shop
+![Playwright Python Tests](https://github.com/khadirz/Master_QA_References/actions/workflows/playwright-python-tests.yml/badge.svg)
 
 This project is a practical QA automation project using **Playwright with Python** and **pytest**.
 
