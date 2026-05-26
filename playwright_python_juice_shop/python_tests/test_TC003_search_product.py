@@ -1,4 +1,3 @@
-import re
 from playwright.sync_api import Page, expect
 from helpers.popup_helper import close_startup_popups
 
@@ -46,9 +45,11 @@ def test_search_for_apple_juice(page: Page):
 
     # STEP 9:
     # Verify the actual product result is visible.
-    # We use exact regex so it does not match Pineapple Juice.
-    apple_juice_result = page.locator("div.name").filter(
-        has_text=re.compile(r"^Apple Juice \(1000ml\)$")
+    # In this Juice Shop version, the product name is exposed as a button inside the product card.
+    apple_juice_result = page.get_by_role(
+        "button",
+        name="Apple Juice (1000ml)",
+        exact=True
     )
 
     expect(apple_juice_result).to_be_visible()
