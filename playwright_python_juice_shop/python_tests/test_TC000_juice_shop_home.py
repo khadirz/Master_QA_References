@@ -1,6 +1,8 @@
+import pytest
 from playwright.sync_api import Page, expect
 
-
+@pytest.mark.login
+@pytest.mark.ci
 def test_open_juice_shop_homepage(page: Page):
     # STEP 1:
     # Open the OWASP Juice Shop application.

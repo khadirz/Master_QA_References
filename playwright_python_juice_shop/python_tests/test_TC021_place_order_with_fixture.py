@@ -1,10 +1,12 @@
+import pytest
 from playwright.sync_api import Page
 from helpers.checkout_helper import (
     place_order,
     verify_order_confirmation_page,
 )
 
-
+@pytest.mark.checkout
+@pytest.mark.ci
 def test_place_order_with_checkout_fixture(checkout_order_summary_page: Page):
     """
     Test goal:

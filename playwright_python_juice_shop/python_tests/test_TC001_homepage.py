@@ -1,6 +1,9 @@
 from playwright.sync_api import Page, expect
 from helpers.popup_helper import close_startup_popups
+import pytest
 
+@pytest.mark.smoke
+@pytest.mark.ci
 
 def test_homepage_loads_successfully(page: Page):
     """

@@ -1,7 +1,9 @@
+import pytest
 from playwright.sync_api import Page, expect
 from helpers.popup_helper import close_startup_popups
 
-
+@pytest.mark.smoke
+@pytest.mark.ci
 def test_basic_assertions_on_homepage(page: Page):
     """
     Test goal:
