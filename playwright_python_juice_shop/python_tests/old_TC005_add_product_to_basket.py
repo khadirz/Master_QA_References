@@ -1,6 +1,6 @@
 from playwright.sync_api import Page, expect
 from helpers.popup_helper import close_startup_popups
-from python_tests.test_TC006_login import login_to_juice_shop
+from helpers.login_helper import login_to_juice_shop
 
 
 def test_add_first_product_to_basket_after_login(page: Page):
