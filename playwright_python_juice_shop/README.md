@@ -976,3 +976,22 @@ Confirmation
 ```
 
 This project now demonstrates a complete UI automation flow from login to order confirmation using Playwright with Python, reusable helpers, pytest fixtures, Docker, and GitHub Actions CI.
+
+## Pytest Markers
+
+This project uses pytest markers to organize and run specific groups of tests.
+
+Markers are defined in `pytest.ini`.
+
+Available markers:
+
+```text
+smoke: quick smoke tests for basic application availability
+login: login and authentication related tests
+basket: basket related tests
+checkout: checkout flow related tests
+regression: wider regression test coverage
+ci: tests that are safe to run in GitHub Actions CI
+
+for example, Run checkout tests:
+python3 -m pytest -m checkout --headed
