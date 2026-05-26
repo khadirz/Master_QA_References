@@ -56,32 +56,41 @@ jobs:
           echo "OWASP Juice Shop did not start in time"
           exit 1
 
-      - name: Run Playwright Python tests
+      # - name: Run Playwright Python tests
+      #   run: |
+      #     python -m pytest \
+      #       python_tests/test_TC001_homepage.py \
+      #       python_tests/test_TC002_locators_basic.py \
+      #       python_tests/test_TC003_search_product.py \
+      #       python_tests/test_TC004_assertions_basic.py \
+      #       python_tests/test_TC005_signup_user.py \
+      #       python_tests/test_TC006_login_user_with_fixture.py \
+      #       python_tests/test_TC007_add_product_with_logged_in_fixture.py \
+      #       python_tests/test_TC008_add_specific_product_with_fixture.py \
+      #       python_tests/test_TC009_remove_product_with_fixture.py \
+      #       python_tests/test_TC010_negative_login.py \
+      #       python_tests/test_TC011_login_form_validation.py \
+      #       python_tests/test_TC012_search_no_result.py \
+      #       python_tests/test_TC013_product_in_basket_fixture_check.py \
+      #       python_tests/test_TC014_basket_quantity_with_fixture.py \
+      #       python_tests/test_TC015_checkout_address_fixture_check.py \
+      #       python_tests/test_TC017_checkout_delivery_fixture_check.py \
+      #       python_tests/test_TC018_checkout_payment_fixture_check.py \
+      #       python_tests/test_TC020_checkout_order_summary_fixture_check.py \
+      #       python_tests/test_TC021_place_order_with_fixture.py \
+      #       --browser chromium \
+      #       --tracing retain-on-failure \
+      #       --screenshot only-on-failure \
+      #       --video retain-on-failure
+
+      - name: Run Playwright Python tests by CI marker
         run: |
-          python -m pytest \
-            python_tests/test_TC001_homepage.py \
-            python_tests/test_TC002_locators_basic.py \
-            python_tests/test_TC003_search_product.py \
-            python_tests/test_TC004_assertions_basic.py \
-            python_tests/test_TC005_signup_user.py \
-            python_tests/test_TC006_login_user_with_fixture.py \
-            python_tests/test_TC007_add_product_with_logged_in_fixture.py \
-            python_tests/test_TC008_add_specific_product_with_fixture.py \
-            python_tests/test_TC009_remove_product_with_fixture.py \
-            python_tests/test_TC010_negative_login.py \
-            python_tests/test_TC011_login_form_validation.py \
-            python_tests/test_TC012_search_no_result.py \
-            python_tests/test_TC013_product_in_basket_fixture_check.py \
-            python_tests/test_TC014_basket_quantity_with_fixture.py \
-            python_tests/test_TC015_checkout_address_fixture_check.py \
-            python_tests/test_TC017_checkout_delivery_fixture_check.py \
-            python_tests/test_TC018_checkout_payment_fixture_check.py \
-            python_tests/test_TC020_checkout_order_summary_fixture_check.py \
-            python_tests/test_TC021_place_order_with_fixture.py \
+          python -m pytest -m ci \
             --browser chromium \
             --tracing retain-on-failure \
             --screenshot only-on-failure \
             --video retain-on-failure
+
 
       - name: Upload Playwright artifacts
         if: always()
