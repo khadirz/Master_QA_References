@@ -57,12 +57,13 @@ class HomePage:
     def verify_product_result_visible(self, product_name: str):
         """
         Verify that a product result is visible on the search results page.
+
+        We use an exact XPath text match because Juice Shop exposes
+        the product name differently in local and CI runs.
         """
 
-        product_result = self.page.get_by_role(
-            "button",
-            name=product_name,
-            exact=True
-        )
+        product_result = self.page.locator(
+            f'xpath=//*[normalize-space()="{product_name}"]'
+        ).first
 
         expect(product_result).to_be_visible()
