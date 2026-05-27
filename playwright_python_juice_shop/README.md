@@ -1012,3 +1012,14 @@ pages/
 ├── login_page.py
 ├── basket_page.py
 └── checkout_page.py
+```
+
+## HTML Test Report
+
+This project supports local HTML test reports using `pytest-html`.
+
+Generate an HTML report for CI-safe tests:
+
+```bash
+python3 -m pytest -m ci --headed --html=reports/ci-report.html --self-contained-html
+```
