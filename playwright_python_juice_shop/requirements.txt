@@ -1,3 +1,4 @@
 pytest
 playwright
-pytest-playwrightpytest-html==4.1.1
+pytest-playwright
+pytest-html==4.1.1
