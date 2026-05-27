@@ -1,13 +1,14 @@
+import pytest
 from playwright.sync_api import Page, expect
+
 from helpers.navigation_helper import go_to_homepage
 from helpers.search_helper import search_product
-from helpers.basket_helper import (
-    add_first_visible_product_to_basket,
-    open_basket,
-    verify_product_in_basket,
-)
+from helpers.basket_helper import add_first_visible_product_to_basket
+from pages.basket_page import BasketPage
 
 
+@pytest.mark.basket
+@pytest.mark.ci
 def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: Page):
     """
     Test goal:
@@ -16,9 +17,7 @@ def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: P
     open the basket,
     and verify that Apple Juice is visible in the basket.
 
-    Why this is CI-friendly:
-    The logged_in_page fixture creates a fresh user and logs in during the test run.
-    So the test does not depend on old local test data.
+    This test uses the BasketPage Page Object.
     """
 
     # STEP 1:
@@ -39,15 +38,21 @@ def test_add_specific_product_to_basket_with_logged_in_fixture(logged_in_page: P
 
     # STEP 5:
     # Add the first visible product to basket.
-    # In Juice Shop search results, Apple Juice appears as the first result.
-    # This avoids fragile locators that behave differently locally and in CI.
     add_first_visible_product_to_basket(page)
 
     # STEP 6:
-    # Open basket.
-    open_basket(page)
+    # Verify basket counter changed to 1.
+    basket_page = BasketPage(page)
+    basket_page.verify_basket_count("1")
 
     # STEP 7:
+    # Open basket page.
+    basket_page.open()
+
+    # STEP 8:
+    # Verify basket page is open.
+    basket_page.verify_loaded()
+
+    # STEP 9:
     # Verify Apple Juice is listed in basket.
-    # This confirms that the product added was Apple Juice.
-    verify_product_in_basket(page, "Apple Juice (1000ml)")
+    basket_page.verify_product_visible("Apple Juice (1000ml)")
