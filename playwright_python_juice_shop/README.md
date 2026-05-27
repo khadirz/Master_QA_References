@@ -1,5 +1,5 @@
 # Playwright Python Automation Project: OWASP Juice Shop
-![Playwright Python Tests](https://github.com/khadirz/Master_QA_References/actions/workflows/playwright-python-tests.yml/badge.svg)
+
 
 This project is a practical QA automation project using **Playwright with Python** and **pytest**.
 
@@ -993,6 +993,22 @@ basket: basket related tests
 checkout: checkout flow related tests
 regression: wider regression test coverage
 ci: tests that are safe to run in GitHub Actions CI
-
+```
 for example, Run checkout tests:
 python3 -m pytest -m checkout --headed
+
+
+## Page Object Model
+
+This project has started using the Page Object Model pattern to make the test framework easier to maintain and scale.
+
+Page Object Model means that page-specific actions and checks are moved from test files into dedicated page classes.
+
+Current page objects:
+
+```text
+pages/
+├── home_page.py
+├── login_page.py
+├── basket_page.py
+└── checkout_page.py
