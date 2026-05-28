@@ -2,3 +2,4 @@ pytest
 playwright
 pytest-playwright
 pytest-html==4.1.1
+requests
