@@ -1023,3 +1023,25 @@ Generate an HTML report for CI-safe tests:
 ```bash
 python3 -m pytest -m ci --headed --html=reports/ci-report.html --self-contained-html
 ```
+
+## API Testing
+
+This project includes API tests using **Python, pytest, and requests**.
+
+The API tests validate backend behavior directly without using the browser. They are faster than UI tests and useful for checking response status codes, response data, authentication behavior, and API response structure.
+
+Current API test coverage:
+
+| Test Case | Description |
+|---|---|
+| API_001 | Product search returns Apple Juice |
+| API_002 | Product search returns no result for an unknown product |
+| API_003 | Negative login rejects invalid credentials |
+| API_004 | Product search response contract validation |
+| API_005 | Positive login returns an authentication token |
+| API_006 | Authenticated basket request using token and basket ID |
+
+Run all API tests:
+
+```bash
+python3 -m pytest -m api -s -v
