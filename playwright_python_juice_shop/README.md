@@ -1,5 +1,40 @@
 # Playwright Python Automation Project: OWASP Juice Shop
 
+## Table of Contents
+
+- [Project Goal](#project-goal)
+- [Tech Stack](#tech-stack)
+- [Application Under Test](#application-under-test)
+- [Project Structure](#project-structure)
+- [Setup Guide](#setup-guide)
+  - [1. Prerequisites](#1-prerequisites)
+  - [2. Start Docker Desktop](#2-start-docker-desktop)
+  - [3. Start OWASP Juice Shop](#3-start-owasp-juice-shop)
+  - [4. Open the Project Folder](#4-open-the-project-folder)
+  - [5. Create Python Virtual Environment](#5-create-python-virtual-environment)
+  - [6. Install Python Dependencies](#6-install-python-dependencies)
+  - [7. Install Playwright Browsers](#7-install-playwright-browsers)
+- [Running Tests](#running-tests)
+- [Quick Start Summary](#quick-start-summary)
+- [GitHub Actions CI](#github-actions-ci)
+- [Current CI Strategy](#current-ci-strategy)
+- [CI-Ready Fixtures](#ci-ready-fixtures)
+- [Test Coverage](#test-coverage)
+- [Main E-commerce Workflow Covered](#main-e-commerce-workflow-covered)
+- [Negative Testing Coverage](#negative-testing-coverage)
+- [Helper Functions](#helper-functions)
+- [Key Learning Points](#key-learning-points)
+- [Important Playwright Lessons Learned](#important-playwright-lessons-learned)
+- [Test Data Notes](#test-data-notes)
+- [Common Problems and Fixes](#common-problems-and-fixes)
+- [AI-Assisted Development](#ai-assisted-development)
+- [Git Commands](#git-commands)
+- [Future Improvements](#future-improvements)
+- [Current Status](#current-status)
+- [Pytest Markers](#pytest-markers)
+- [Page Object Model](#page-object-model)
+- [HTML Test Report](#html-test-report)
+- [API Testing](#api-testing)
 
 This project is a practical QA automation project using **Playwright with Python** and **pytest**.
 
